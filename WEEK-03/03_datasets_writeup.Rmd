@@ -1,0 +1,292 @@
+---
+title: "Week 03 Assignment 02_datasets"
+author: "Nic Trout"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document:
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/latex-templates/homework.tex
+    fig_caption: yes
+    number_sections: yes
+  html_document:
+    df_print: paged
+  word_document: default
+header-includes: \usepackage{mathtools}
+course: STATS 419 Survey of Multivariate Analysis
+instructor: Monte J. Shaffer
+email: nicholas.trout@wsu.edu
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r, mychunk-global, message = FALSE}
+
+library(devtools) #devtools is required for function source_url to work
+my.source = 'github';
+github.path = "https://raw.githubusercontent.com/njtrout/WSU_STATS419_FALL2020/";
+source_url(paste0(github.path, "master/functions/libraries.R"));
+source_url(paste0(github.path, "master/functions/functions-imdb.R"));
+
+
+```
+
+```{r, mychunk-global-local, message = FALSE}
+
+library(devtools) #devtools is required for function source_url to work
+my.source = 'local';
+local.path = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/";
+source(paste0(local.path, "functions/libraries.R"));
+source(paste0(local.path, "functions/functions-imdb.R"));
+
+```
+
+Malcolm Gladwell\footnote{Comb your hair, man!} talks about outliers \citep{Gladwell:2008}.
+
+\citet{Shaffer:2011} has a dissertation.
+
+We would like to thank \citet {Rmarkdown:Latex:Templates} for the hints to create our own template...
+
+
+# Matrix
+
+Question 1
+Create the "rotate matrix" functions as described in lectures.  Apply to the example "myMatrix".
+
+```{r, mychunk-matrix-include, message=FALSE}
+
+source(paste0(local.path, "functions/functions-matrix.R"), local=T );
+
+myMatrix = matrix ( c (
+											1, 0, 2,
+											0, 3, 0,
+											4, 0, 5
+											), nrow=3, byrow=T);
+
+transposeMatrix(myMatrix);
+rotateMatrix90(myMatrix);
+rotateMatrix180(myMatrix);
+rotateMatrix270(myMatrix);
+
+```
+
+# IRIS 
+Question 2: Recreate the graphic for the IRIS Data Set using R.  Same titles, same scales, same colors.  See: https://en.wikipedia.org/wiki/Iris_flower_data_set#/media/File:Iris_dataset_scatterplot.svg
+```{r}
+
+pairs(iris[1:4],main="Iris Data (red=setosa,green=versicolor,blue=virginica)", pch=21,
+  bg=c("red","green3","blue")[unclass(iris$Species)])
+
+```
+
+
+Question 3: Right 2-3 sentences concisely defining the IRIS Data Set.  Maybe search KAGGLE for a nice template.  Be certain the final writeup are your own sentences (make certain you modify what you find, make it your own, but also cite where you got your ideas from).  NOTE:  Watch the video, Figure 8 has a +5 EASTER EGG.
+
+The iris data set is a mulitivariate data set that looks at multiple measurments of the iris flower. The data is made up of 50 samples from the species of iris, that being the iris setosa, iris virginca, and iris versicolor. From there the data was able to be obsereved into a linear discriminant model to look at each species independent from one another.
+
+## Cleanup RAW
+
+Question 4
+Import "personality-raw.txt" into R.  Remove the V00 column.  Create two new columns from the current column "date_test":  year and week. Stack Overflow may help:  https://stackoverflow.com/questions/22439540/how-to-get-week-numbers-from-dates ... Sort the new data frame by YEAR, WEEK so the newest tests are first ... The newest tests (e.g., 2020 or 2019) are at the top of the data frame.  Then remove duplicates using the unique function based on the column "md5_email".  Save the data frame in the same "pipe-delimited format" ( | is a pipe ) with the headers.  You will keep the new data frame as "personality-clean.txt" for future work (you will not upload it at this time).  In the homework, for this tasks, report how many records your raw dataset had and how many records your clean dataset has.
+
+838 obs. when uncleaned, now cleaned there are 678 obs.
+```{r}
+#reading in the data 
+data = read.table("C:/personality-raw.txt", sep ="|", header = TRUE, dec = ".")
+data
+
+#removing the V00 column
+data$V00 <- NULL
+data
+
+#formating the date
+v = as.Date(format(as.POSIXct(data$date_test,format='%m/%d/%Y %H:%M'),format='%m/%d/%Y'),format='%m/%d/%Y')
+
+#creating week and year columns
+week = format(as.Date(v), "%W")
+year = format(as.Date(v), "%Y")
+data$year = year
+data$week = week
+
+#removing date_test
+data$date_test = NULL
+
+#converting week and year from char to int 
+converted_year = type.convert(year)
+converted_week = type.convert(week)
+
+#ordering the data 
+data = data[order(data$year, data$week, decreasing = TRUE),]
+
+clean_data = distinct(data, md5_email, .keep_all = TRUE)
+
+#View(data)
+dim(data)
+dim(clean_data)
+
+write.table(clean_data, "C:/Users/defaultuser0/personality-clean.txt", sep="|")
+
+```
+
+
+# Variance and zscore
+
+Question 5
+Write functions for doSummary and sampleVariance and doMode ... test these functions in your homework on the "monte.shaffer@gmail.com" record from the clean dataset.  Report your findings.  For this "monte.shaffer@gmail.com" record, also create z-scores.  Plot(x,y) where x is the raw scores for "monte.shaffer@gmail.com" and y is the z-scores from those raw scores.  Include the plot in your assignment, and write 2 sentences describing what pattern you are seeing and why this pattern is present. row (vectors) z score
+
+```{r}
+#worked on this with Jaleel
+#doMode and whichMaxFreq are your functions
+
+doMode = function(x) # alias ?
+{
+	whichMaxFreq(x);
+}
+
+whichMaxFreq = function(x)  # doMode
+{
+	x.table = as.data.frame( table(x) );
+	#most frequent values
+		freq.max = max( x.table$Freq )
+	#creating list of values
+	x.list = x.table[x.table$Freq==freq.max,];
+	#return as vector
+	xs = as.numeric( as.vector (x.list$x) );
+	xs;
+}
+
+doStatsSummary = function(x)
+{
+  #calculating the mean
+  print("mean of every column")
+  print(colMeans(x))
+  #calculating the median
+  print("median of every column")
+  #calculating the mode
+  print("mode of every column")
+  print(sapply(x,doMode))
+  #calculating the length
+  print("length of every column")
+  print(dim(x))
+  #calculating the number of NA's
+  print(sum(is.na(x)))
+  #calulating the varinace
+  print("variance of every column")
+  #calculating standard deviation 
+  print("standard deviation of every column")
+  print(sapply(x, sd))
+}
+
+doSampleVariance = function(x, method="two-pass")
+{
+  #if naive method
+  if(method=="naive")
+  {
+    return(sum((x-mean(x))^2)/(length(x)-1));
+  }
+  else
+  {
+    #two pass algorithm
+    sum = 0;
+    for(i in x)
+    {
+      sum = sum+((i-mean(x))*(i-mean(x)))
+    }
+    return((sum/length(x)-1));
+  }
+}
+
+```
+
+```{r, z-score}
+zscore = function(x,y)
+{
+  #setting standard deviation, mean, and empty vector
+  standardDeviation = sapply(x,sd)
+  mean = colMeans(x)
+  vec = c()
+  #looping and populating empty vector
+  for(a in 1:ncol(y))
+  {
+    #this is calculating x-mean/standard deviation
+    vec = c(vec,(y[,a]-data.frame(mean[a]))/data.frame(standardDeviation[a]))
+  }
+  return(vec);
+}
+
+```
+
+# Will and Denzel
+
+Question 6
+Compare Will Smith and Denzel Washington. [See 03_n greater 1-v2.txt for the necessary functions and will-vs-denzel.txt for some sample code and in You will have to create a new variable $millions.2000 that converts each movie's $millions based on the $year of the movie, so all dollars are in the same time frame.  You will need inflation data from about 1980-2020 to make this work.
+```{r, denzel}
+library(devtools)
+library(humanVerseWSU)
+source_url("http://md5.mshaffer.com/WSU_STATS419/denzel");
+humanVerseWSU::loadInflationData();
+str(denzel$movies.50);
+denzel$movies.50 = standardizeDollarsInDataFrame(denzel$movies.50, 2000, "millions", "year", "millionsAdj");
+str(denzel$movies.50);
+plot(denzel$movies.50$millions,denzel$movies.50$millionsAdj);
+
+```
+
+```{r, will}
+library(devtools)
+library(humanVerseWSU)
+source_url("http://md5.mshaffer.com/WSU_STATS419/will");
+humanVerseWSU::loadInflationData();
+str(will$movies.50);
+will$movies.50 = standardizeDollarsInDataFrame(will$movies.50, 2000, "millions", "year", "millionsAdj");
+str(will$movies.50);
+plot(will$movies.50$millions,will$movies.50$millionsAdj);
+
+```
+
+## Will Smith
+```{r, mychunck-will, fig.cap = c("Will Smith scatterplot: IMDB(2020)", "Will Smith boxplot raw millions: IMDB(2020)")}
+nmid = "nm0000226";
+ 	#will = grabFilmsForPerson(nmid);
+  source_url("http://md5.mshaffer.com/WSU_STATS419/will"); 
+ 	plot(will$movies.50[,c(1,6,7:10)]);
+  	boxplot(will$movies.50$millions);
+		widx =  which.max(will$movies.50$millions);
+	will$movies.50[widx,];
+		summary(will$movies.50$year); 
+```
+## Denzel washington 
+```{r, mychunck-denzel}
+nmid = "nm0000243";
+ 	#denzel = grabFilmsForPerson(nmid);
+  source_url("http://md5.mshaffer.com/WSU_STATS419/denzel");
+ 	plot(denzel$movies.50[,c(1,6,7:10)]);
+  	boxplot(denzel$movies.50$millions);
+		didx =  which.max(denzel$movies.50$millions);
+	denzel$movies.50[didx,];
+		summary(denzel$movies.50$year);
+```
+
+
+## Side-by-Side Comparisons 
+Question 7
+Build side-by-side box plots on several of the variables (including #6) to compare the two movie stars.  After each box plot, write 2+ sentence describing what you are seeing, and what conclusions you can logically make.  You will need to review what the box plot is showing with the box portion, the divider in the box, and the whiskers.
+
+## BoxPlot of Top-50 movies using Raw Dollars
+From this box plot (pre inflation) you can see Will Smith has sold more movie then Denzel Washington since Will's box plot has a peak of 350 million and Denzel's is just under 150 million. On average you can see Will Smith sells about 60 million worth whereas Denzel sells about 50 million. I assume post in
+```{r, mychunck-boxplot-raw}
+par(mfrow=c(1,2));
+	boxplot(will$movies.50$millions, main=will$name, ylim=c(0,360), ylab="Raw Millions" );
+	boxplot(denzel$movies.50$millions, main=denzel$name, ylim=c(0,360), ylab="Raw Millions" );
+	par(mfrow=c(1,1));
+```
+
+
+

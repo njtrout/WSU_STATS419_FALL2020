@@ -19,8 +19,15 @@
 
 %%% default RStudio packages %%%
 \usepackage[unicode=true]{hyperref}
-
-
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author$},  
+            pdftitle={$title$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            pdfborder={0 0 0}}
 
 
 \usepackage[usenames,dvipsnames]{color}
@@ -94,17 +101,7 @@ $endif$
 
 
 
-\hypersetup{breaklinks=true,%
-            bookmarks=true,%
-            pdfauthor={$author$},%
-            pdftitle={$title$},%
-            colorlinks=true,%
-            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,%
-            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,%
-            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,%
-            pdfborder={0 0 0}%
-            }%
-            
+
 
 
 \begin{document}

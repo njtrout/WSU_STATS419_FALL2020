@@ -1,11 +1,12 @@
 ---
-title: "Week 03 Assignment"
+title: "Week 03 Assignment 02_datasets"
 author: "Nic Trout"
 email: "nicholas.trout@wsu.edu"
-wsu-id: "11637389"
 course: "STATS 419 Survey of Multivariate Analysis"
 instructor: "Monte J. Shaffer"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+fig_caption: true
+number_sections: true
 output: pdf_document
 ---
 
@@ -18,8 +19,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-```{r}
-library(devtools);
+```{r, mychunk-global, message = false, echo = false}
+
+library(devtools) #devtools is required for function source_url to work
+my.source = 'github';
 github.path = "https://raw.githubusercontent.com/njtrout/WSU_STATS419_FALL2020/";
 source_url(paste0(github.path, "master/WEEK-03/functions/libraries.R"));
 source_url(paste0(github.path, "master/WEEK-03/functions/functions-imdb.R"));
