@@ -413,15 +413,14 @@ result.neighbors;
 
 ```{r}
 
-result.neighbors
-result.neighbors$distance = conv_unit(distm(result.neighbors[,3:2], fun=distHaversine),  "m", "mi");
-
-result.neighbors$distance <= 10;
-
-result.neighbors$zipcode = result.neighbors$zipcode!="99163"
+#converting neighbors distance from m to mi and measuring with distharvesine and creating dataframe of data
+result.neighbors$distance = conv_unit(distm(result.neighbors[,3:2], fun=distHaversine),  "m", "mi")[,6];
+#creating a limit on distance < than 10
+result.neighbors$distance = result.neighbors$distance <= 10;
+#removing the specified zip code
+result.neighbors$zipcode = result.neighbors[result.neighbors$zipcode!='99163',];
 
 ```
-
 
 # String distances
 
