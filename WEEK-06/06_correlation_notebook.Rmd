@@ -1,6 +1,6 @@
 ---
 title: 'R Notebook sandbox: Playing with Correlation'
-name: 'Nic Trout' 
+name: 'Nic Trout'
 output:
   html_document:
     df_print: paged
