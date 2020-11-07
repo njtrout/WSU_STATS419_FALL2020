@@ -1,9 +1,10 @@
 prepareMeasureData = function(measure)
- {
+{
   measure.short = measure[,c(2,3,6,13,19,20,23,30)];
-  measure.df = subsetDataFrame(measure.short, "my.gender", "==", "m")
-  measure.df = subsetDataFrame(measure.short, "age", ">=", 18)
-  measure.df = subsetDataFrame(measure.short, "age", "<=", 28)
+  measure.short$gender = as.character(measure.short$my.gender)
+  measure.df = subsetDataFrame(measure.short, "gender", "==", "m")
+  measure.df = subsetDataFrame(measure.df, "age", ">=", 18)
+  measure.df = subsetDataFrame(measure.df, "age", "<=", 28)
   mylogic = measure.df$arm.reach > measure.df$height
   measure.df = measure.df[mylogic,]
   measure.ndf = measure.df[, c(1,2,3,5,6,7,4,8)];
@@ -16,10 +17,11 @@ prepareMeasureData = function(measure)
 
   measure.fdf;
 }
-
-getProportionHandWidth = function(measure)
+#when pushed to git last measure was passed in 
+getProportionHandWidthMeasure = function(measure.df)
 {
-  measure.fdf = measure
+  
+  measure.fdf = measure.df
   measure.height.proportion = measure.fdf$height/measure.fdf$hand.width
   #View(measure.height.proportion)
   measure.armspan.proportion = measure.fdf$arm.span/measure.fdf$hand.width
@@ -29,6 +31,8 @@ getProportionHandWidth = function(measure)
   measure.proportion1 = cbind(measure.height.proportion, measure.armspan.proportion, measure.armreach.proportion)
   measure.data1 = measure.df[,c(1,6)]
   measure.proportion = cbind(measure.data1,measure.proportion1)
+  measure.proportion$hand.width.proportion = 1
+  measure.proportion$arm.reach = NULL
   measure.proportion
 }
 
@@ -71,4 +75,22 @@ prepareDataNBA = function(nbadata)
     nba.fdf[,i] = as.numeric(nba.fdf[,i])
   }
   nba.fdf 
+}
+
+getProportionHandWidthNBA = function(nba.df)
+{
+  nba.df.height.proportion = nba.df$height/nba.df$hand.width
+  
+  nba.df.armspan.proportion = nba.df$wingspan/nba.df$hand.width
+  
+  nba.df.armreach.proportion = nba.df$standing.reach/nba.df$hand.width
+  
+  nba.df.proportion1 = cbind(nba.df.height.proportion, nba.df.armspan.proportion, nba.df.armreach.proportion)
+  nba.df.data1 = nba.df[,c(1,6)]
+  nba.df.proportion = cbind(nba.df.data1,nba.df.proportion1)
+  nba.df.proportion$hand.width.proportion = 1
+  nba.df.proportion$arm.reach = NULL
+  nba.df.proportion = subset(nba.df.proportion, select = -(wingspan))
+  nba.df.proportion
+  
 }
