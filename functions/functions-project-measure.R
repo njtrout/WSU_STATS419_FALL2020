@@ -106,12 +106,11 @@ getProportionHandWidthNBA = function(nba.df)
   nba.df.armreach.proportion = nba.df$standing.reach/nba.df$hand.width
   
   nba.df.proportion1 = cbind(nba.df.height.proportion, nba.df.armspan.proportion, nba.df.armreach.proportion)
-  nba.df.data1 = nba.df[,c(1,6)]
+  nba.df.data1 = nba.df[,c(6,1,2,3,4,5)]
   nba.df.proportion = cbind(nba.df.data1,nba.df.proportion1)
   nba.df.proportion$hand.width.proportion = 1
-  nba.df.proportion$arm.reach = NULL
-  nba.df.proportion = subset(nba.df.proportion, select = -(wingspan))
   nba.df.proportion
+  nba.df.proportion[,c(1,7:10)]
   
 }
 
