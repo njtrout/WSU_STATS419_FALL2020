@@ -5,17 +5,31 @@ prepareMeasureData = function(measure)
   measure.df = subsetDataFrame(measure.short, "gender", "==", "m")
   measure.df = subsetDataFrame(measure.df, "age", ">=", 18)
   measure.df = subsetDataFrame(measure.df, "age", "<=", 28)
-  mylogic = measure.df$arm.reach > measure.df$height
-  measure.df = measure.df[mylogic,]
-  measure.ndf = measure.df[, c(1,2,3,5,6,7,4,8)];
-
-
-  measure.ndf = na.omit(measure.ndf);
+  
+  proportion = measure.df$height/measure.df$hand.width
+  mylogic = proportion<10
+  mylogic[is.na(mylogic)] = TRUE
+  measure.ndf = measure.df[mylogic,]
+  
+  mylogic = measure.ndf$arm.reach > measure.ndf$height
+  mylogic[is.na(mylogic)] = TRUE
+  measure.ndf = measure.ndf[mylogic,]
+  #should I leave in players?
+  #measure.fdf = measure.ndf[, c(1,2,3,5,6,7,4,8)];
+  measure.fdf = measure.ndf[, c(2,3,7,5,6)];
+  colnames(measure.fdf)[1] = "height"
+  colnames(measure.fdf)[2] = "wingspan"
+  colnames(measure.fdf)[3] = "standing.reach"
+  colnames(measure.fdf)[4] = "hand.length"
+  colnames(measure.fdf)[5] = "hand.width"
+  
   set.seed(123)
-  rows=sample(1:(nrow(measure.ndf)),50, replace = TRUE, prob = NULL)
-  measure.fdf = measure.ndf[rows,]
-
+  
+  #rows=sample(1:(nrow(measure.ndf)),50, replace = FALSE, prob = NULL)
+  #measure.fdf = measure.ndf[rows,]
+  
   measure.fdf;
+  
 }
 #when pushed to git last measure was passed in 
 getProportionHandWidthMeasure = function(measure.df)
@@ -38,13 +52,15 @@ getProportionHandWidthMeasure = function(measure.df)
 
 prepareDataNBA = function(nbadata)
 {
+  
+  #nbadata = read.csv("C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/nbadata.txt", sep ="\t", header = TRUE);
   #converting to numerica
   nbadata_handlength = as.numeric(nbadata$HAND.LENGTH..INCHES.)
   nbadata_handwidth = as.numeric(nbadata$HAND.WIDTH..INCHES.)
   
   #create a data frame 
   nbadata_ = data.frame(nbadata_handlength, nbadata_handwidth)
-  
+  nbanew = nbadata
   #converting from feet and inches to inches
   for( i in 1:nrow(nbadata)){
     for(j in 1:4)
@@ -54,23 +70,27 @@ prepareDataNBA = function(nbadata)
       feet = as.numeric(tmp[1]);
       inches = as.numeric(tmp[2]);
       final = 12 * as.numeric(tmp[1]) + as.numeric(tmp[2]);
-      nbadata[i,c(6,7,8,10)][j] = final;
+      nbanew[i,c(6,7,8,10)][j] = final;
     }
   }
   #removing columns I dont need and renaming data 
-  nbadata = nbadata[, c(1,4,5,7,8,10)]
-  colnames(nbadata)[1] = "players"
-  colnames(nbadata)[2] = "hand.length"
-  colnames(nbadata)[3] = "hand.width"
-  colnames(nbadata)[4] = "height"
-  colnames(nbadata)[5] = "standing.reach"
-  colnames(nbadata)[6] = "wingspan"
+  nbadata = nbanew
+  nbadata = nbadata[, c(7,10,8,4,5,1)]
+  #nbadata = nbadata[, c(1,2,4,5,7,8,10)]
+  #colnames(nbadata)[2] = "POS
+  colnames(nbadata)[1] = "height"
+  colnames(nbadata)[2] = "wingspan"
+  colnames(nbadata)[3] = "standing.reach"
+  colnames(nbadata)[4] = "hand.length"
+  colnames(nbadata)[5] = "hand.width"
+  colnames(nbadata)[6] = "players"
+  nbanew = nbadata
   nbadata$rookie.year=2019;
   set.seed(123);
   nbadata = na.omit(nbadata);
   rows=sample(1:(nrow(nbadata)),50)
   nba.fdf = nbadata[rows,]
-  ncol = 2:7
+  ncol = 1:5
   for(i in ncol){
     nba.fdf[,i] = as.numeric(nba.fdf[,i])
   }
@@ -93,4 +113,12 @@ getProportionHandWidthNBA = function(nba.df)
   nba.df.proportion = subset(nba.df.proportion, select = -(wingspan))
   nba.df.proportion
   
+}
+
+plotcorr = function(x,y,xl,yl, mymain = "NBA", dotcolor = "blue", linecolor = "red")
+{
+  plot(x, y, main= mymain, xlab = xl, ylab = yl , xlim = c(60,95), ylim = c(6,11), bty = "n", col = dotcolor);
+  reg = lm(y~x);
+  print(summary(reg));
+  abline(reg, col= linecolor)
 }
