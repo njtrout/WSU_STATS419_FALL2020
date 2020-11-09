@@ -38,9 +38,9 @@ getProportionHandWidthMeasure = function(measure.df)
   measure.fdf = measure.df
   measure.height.proportion = measure.fdf$height/measure.fdf$hand.width
   #View(measure.height.proportion)
-  measure.armspan.proportion = measure.fdf$arm.span/measure.fdf$hand.width
+  measure.armspan.proportion = measure.fdf$wingspan/measure.fdf$hand.width
   #View(measure.armspan.proportion)
-  measure.armreach.proportion = measure.fdf$arm.reach/measure.fdf$hand.width
+  measure.armreach.proportion = measure.fdf$standing.reach/measure.fdf$hand.width
   #View(measure.armreach.proportion)
   measure.proportion1 = cbind(measure.height.proportion, measure.armspan.proportion, measure.armreach.proportion)
   measure.data1 = measure.df[,c(1,5)]
