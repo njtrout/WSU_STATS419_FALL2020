@@ -134,24 +134,45 @@ plotcorrS = function(x.m = x.m,
   maxy = max(y.m,y.n, na.rm = TRUE);
   
   plot(x.m, y.m, main = main.m, xlab = xl, ylab = yl, bty = "n", col = dotcolor.m, xlim = c(minx,maxx), ylim = c(miny,maxy));
-  reg.m = lm(y.m~x.m)
-  #print(summary(reg.m));
-  abline(reg.m, col= linecolor.m)
+  reg.m = lm(y.m~x.m);
+  abline(reg.m, col= linecolor.m);
   
   plot(x.n, y.n, main = main.n, xlab = xl, ylab = yl, bty = "n", col = dotcolor.n, xlim = c(minx,maxx), ylim = c(miny,maxy));
-  reg.n = lm(y.n~x.n)
-  #print(summary(reg.n));
-  abline(reg.n, col= linecolor.n)
+  reg.n = lm(y.n~x.n);
+  abline(reg.n, col= linecolor.n);
   
+  #dev.new(width=2.5, height=2.5, unit="in")
+  #plot(x.m,y.m)
+  #plot(x.n,y.n)
   #https://stats.stackexchange.com/questions/93540/testing-equality-of-coefficients-from-two-different-regressions
+
+  nba.beta = reg.n$coefficients[2];
+  nba.se = summary(reg.n)$coefficients[2,2];
   
-  nba.beta = reg.n$coefficients[2]
-  nba.se = summary(reg.n)$coefficients[2,2]
+  measure.beta = reg.m$coefficients[2];
+  measure.se = summary(reg.m)$coefficients[2,2];
   
-  measure.beta = reg.m$coefficients[2]
-  measure.se = summary(reg.m)$coefficients[2,2]
+  z = (nba.beta - measure.beta)/(sqrt(nba.se^2+measure.se^2));
+  z;
   
-  z = (nba.beta - measure.beta)/(sqrt(nba.se^2+measure.se^2))
-  z
+}
+
+boxplotfunc = function(x.1 = x.1, x.2 = x.2, x.3 = x.3, x.4 = x.4,
+                       yl = "INCHES",
+                       xl.1 = "NBA HEIGHT",
+                       xl.2 = "MEASURE HEIGHT",
+                       xl.3 = "MEASURE HANDWIDTH",
+                       xl.4 = "NBA HAND WIDTH",
+                       main = "HEIGHT/HAND COMPARISON")
+{
+  par(mfrow =c(1,4));
+  miny = min(x.1, x.2, x.3, x.4, na.rm = TRUE);
+  maxy = max(x.1, x.2, x.3, x.4, na.rm = TRUE);
+  
+  boxplot(x.1, main = main, ylim = c(miny,maxy), ylab = yl, xlab = xl.1, frame.plot = FALSE);
+  boxplot(x.2, main = "", ylim = c(miny,maxy), ylab = "", xlab = xl.2, frame.plot = FALSE);
+  boxplot(x.3, main = "", ylim = c(miny,maxy), ylab = "", xlab = xl.3, frame.plot = FALSE);
+  boxplot(x.4, main = "", ylim = c(miny,maxy), ylab = "", xlab = xl.4, frame.plot = FALSE);
+  par(mfrow = c(1,1));
   
 }
