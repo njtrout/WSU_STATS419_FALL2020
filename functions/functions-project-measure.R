@@ -127,6 +127,7 @@ plotcorrS = function(x.m = x.m,
                      dotcolor.m = "#5e6a71",
                      linecolor.m = "#981e32"){
   
+  par(mfrow =c(1,2));
   minx = min(x.m,x.n, na.rm = TRUE);
   maxx = max(x.m,x.n, na.rm = TRUE);
   
@@ -140,7 +141,7 @@ plotcorrS = function(x.m = x.m,
   plot(x.n, y.n, main = main.n, xlab = xl, ylab = yl, bty = "n", col = dotcolor.n, xlim = c(minx,maxx), ylim = c(miny,maxy));
   reg.n = lm(y.n~x.n);
   abline(reg.n, col= linecolor.n);
-  
+  par(mfrow =c(1,1));
   #dev.new(width=2.5, height=2.5, unit="in")
   #plot(x.m,y.m)
   #plot(x.n,y.n)
