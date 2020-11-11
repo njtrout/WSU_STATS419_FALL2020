@@ -1,0 +1,143 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    toc: true
+    toc_depth: 3 
+    number_sections: true
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+    
+title: "A boring (academic) title or a clever title?"
+subtitle: "A secondary title"
+author: 
+- name: "YOUR NAME HERE"
+  affiliation: "Washington State University"
+keywords: |
+    multiple comparisons to control; multivariate chi-square distribution; nonlinear growth curves; Richard's curve; simulated critical points
+abstract: |
+  In this article we compare the \emph{empirical characteristic function} \citep{Tukey:1977, Becker:1988} to a \emph{moment-generating-functional form} to compute the proportion of hypotheses $m$ that are rejected under the null hypothesis. \vspace{0.25in}
+
+  \noindent Here is a second paragraph of the abstract (if necessary), and with the pipe notation it doesn't break. Notice it still needs to be indented. \vspace{0.25in}
+
+  \noindent Generally, we write this abstract last.  Often it is called the executive summary. It should succinctly summarize the entire document.  You can include references such as this one to the Appendices section \ref{sec:appendix} if necessary.
+sectionnumberdepth: 3
+titleEndnotes: "ENDNOTES"
+titleReferences: "REFERENCES"
+columnsReferences: 2
+titleTOC:  "TABLE OF CONTENTS"
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r,setup-test-correlation,message=FALSE}
+
+library(devtools);       # required for source_url
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+path.github = "https://raw.githubusercontent.com/njtrout/WSU_STATS419_FALL2020/"
+source_url( paste0(path.github,"master/functions/functions-project-measure.R") )
+
+#change to github path
+path.project = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/";
+path.tables = paste0(path.project,"tables/");
+  createDirRecursive(path.tables);
+
+```
+
+
+
+
+\newpage
+
+\input{tables/tree-correlation-table} 
+
+\newpage
+
+
+
+
+```{r, nbadata}
+
+library(measurements) 
+nbadata = read.csv("C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/nbadata.txt", sep ="\t", header = TRUE);
+
+
+
+nba.df = prepareDataNBA(nbadata)
+myData = as.matrix(nba.df[,c(1,2,3,4,5)]);
+file.correlation = paste0(path.tables,"nba-correlation-table.tex");
+
+buildLatexCorrelationTable(myData, 
+  rotateTable = FALSE,
+  width.table = .90,
+  myFile = file.correlation,
+  myNames = c("height", "wingspan", "standing.reach", "hand.length", "hand.width"),
+  myCaption = "Descriptive Statistics and Correlation Analysis (NBA)",
+  myLabel= "table:correlation-nba");
+
+
+Sys.sleep(2);
+
+```
+
+
+\newpage
+
+\input{tables/nba-correlation-table} 
+
+\newpage
+
+
+
+```{r}
+library(measurements)
+
+#measure = utils::read.csv( paste0(path.to.secret, "measure-students.txt"), header=TRUE, quote="", sep="|");
+
+path.project = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/";
+
+path.to.secret = "C:/Users/Nic Trout/Desktop/";
+
+measure = readRDS(paste0(path.to.secret, "final.measure.rds"))
+
+measure.df = prepareMeasureData(measure);
+
+myData = as.matrix(measure.df[,c(1,2,3,4,5)]);
+file.correlation = paste0(path.tables,"measure-students-correlation-table.tex");
+
+buildLatexCorrelationTable(myData, 
+  rotateTable = FALSE,
+  width.table = .90,
+  myFile = file.correlation,
+  myNames = c("height", "wingspan", "standing.reach", "hand.length", "hand.width"),
+  myCaption = "Descriptive Statistics and Correlation Analysis (MEASURE)",
+  myLabel= "table:correlation-student-measure");
+
+
+Sys.sleep(2);
+
+
+```
+
+
+
+\newpage
+
+\input{tables/measure-students-correlation-table} 
+
+\newpage

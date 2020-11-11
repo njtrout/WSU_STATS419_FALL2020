@@ -1,0 +1,237 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    toc: true
+    toc_depth: 3 
+    number_sections: true
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+    
+title: "A boring (academic) title or a clever title?"
+subtitle: "A secondary title"
+author: 
+- name: "YOUR NAME HERE"
+  affiliation: "Washington State University"
+keywords: |
+    multiple comparisons to control; multivariate chi-square distribution; nonlinear growth curves; Richard's curve; simulated critical points
+abstract: |
+  In this article we compare the \emph{empirical characteristic function} \citep{Tukey:1977, Becker:1988} to a \emph{moment-generating-functional form} to compute the proportion of hypotheses $m$ that are rejected under the null hypothesis. \vspace{0.25in}
+
+  \noindent Here is a second paragraph of the abstract (if necessary), and with the pipe notation it doesn't break. Notice it still needs to be indented. \vspace{0.25in}
+
+  \noindent Generally, we write this abstract last.  Often it is called the executive summary. It should succinctly summarize the entire document.  You can include references such as this one to the Appendices section \ref{sec:appendix} if necessary.
+sectionnumberdepth: 3
+titleEndnotes: "ENDNOTES"
+titleReferences: "REFERENCES"
+columnsReferences: 2
+titleTOC:  "TABLE OF CONTENTS"
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r,appendix-setup,message=FALSE}
+library(devtools);       # required for source_url
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+```
+
+Below is the code to load the data and prepare it for analysis.
+#reading
+```{r,appendix-secret,message=FALSE}
+
+path.project = "C:/User/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/";
+
+path.to.secret = "C:/Users/Nic Trout/Desktop/";
+
+measure.data = utils::read.csv( paste0(path.to.secret, "measure-students.txt"), header=TRUE, quote="", sep="|");
+
+
+
+getOne = c("hand.length", "hand.width", "hand.elbow", "elbow.armpit", "arm.reach", "foot.length", "floor.kneepit", "floor.hip", "floor.armpit");
+n.rows = nrow(measure.data);
+
+
+for(one in getOne)
+  {
+  measure.data[one] = NA;
+  }
+
+
+  
+for(i in 1:n.rows)
+  {  
+  measure.row = measure.data[i,];
+  for(one in getOne)
+    {
+    nidx = getIndexOfDataFrameColumns(measure.data, one);
+    
+    myleft = paste0(one,".left");
+      lidx = getIndexOfDataFrameColumns(measure.row, myleft);
+    myright = paste0(one,".right");
+      ridx = getIndexOfDataFrameColumns(measure.row, myleft);
+    
+      print(paste0(
+                  "left: ",myleft," --> ",lidx,
+                  " right: ",myright," --> ",ridx
+                  )
+            );
+      
+      row.m = mean(
+            c(as.numeric(unlist(measure.row[lidx])),
+            as.numeric(unlist(measure.row[ridx]))),
+            na.rm=TRUE);
+      
+    measure.data[i,nidx] =  row.m;
+    }
+  }
+
+
+
+
+
+```
+
+#cleaning
+```{r}
+
+nrow = nrow(measure.data);
+ncol = ncol(measure.data);
+
+
+myUnits = tolower(measure.data$units);
+myUnits[myUnits=="inches"] = "in";
+myUnits[myUnits=="inch"] = "in";
+myUnits[myUnits=="\"in\""] = "in";
+
+measure.data$my.units = myUnits;
+
+myEthnicity = tolower(measure.data$ethnicity);
+myEthnicity[myEthnicity=="white"] = "w";
+myEthnicity[myEthnicity=="caucasian"] = "w";
+myEthnicity[myEthnicity=="caucasain"] = "w";
+myEthnicity[myEthnicity=="\"caucasian\""] = "w";
+myEthnicity[myEthnicity=="anglo"] = "w";
+myEthnicity[myEthnicity=="white non-hispanic"] = "w";
+myEthnicity[myEthnicity=="black"] = "b";
+myEthnicity[myEthnicity=="african american"] = "b";
+myEthnicity[myEthnicity=="hispanic"] = "h";
+myEthnicity[myEthnicity=="japanese"] = "j";
+myEthnicity[myEthnicity=="filipino"] = "f";
+myEthnicity[myEthnicity=="native american"] = "nat";
+myEthnicity[myEthnicity=="latin american"] = "l";
+myEthnicity[myEthnicity=="latino"] = "l";
+myEthnicity[myEthnicity=="\"asian/latino\""] = "al";
+myEthnicity[myEthnicity=="white-filipino"] = "wf";
+myEthnicity[myEthnicity=="asain"] = "a";
+myEthnicity[myEthnicity=="asian"] = "a";
+myEthnicity[myEthnicity=="\"asian\""] = "a";
+myEthnicity[myEthnicity=="chinese"] = "c";
+myEthnicity[myEthnicity=="laotian"] = "lao";
+myEthnicity[myEthnicity=="caucasian/asian"] = "ca";
+myEthnicity[myEthnicity=="white italian"] = "wi";
+myEthnicity[myEthnicity=="japanese italian"] = "ji";
+myEthnicity[myEthnicity=="pacific islander"] = "pi";
+myEthnicity[myEthnicity=="korean"] = "k";
+myEthnicity[myEthnicity=="indian"] = "i";
+
+measure.data$my.ethnicity = myEthnicity;
+
+myGender = tolower(measure.data$gender);
+myGender[myGender=="female"] = "f";
+myGender[myGender=="male"] = "m";
+myGender[myGender=="\"male\""] = "m";
+myGender[myGender=="\"female\""] = "f";
+myGender[myGender=="non-binary"] = "o";
+
+measure.data$my.gender = myGender;
+
+#View(measure.data)
+
+measure = measure.data;
+measure$new.units = "in";
+```
+
+
+```{r}
+
+skip = c("minutes", "age", "quality");
+
+for(r in 1:nrow)
+  {
+  row = measure.data[r,];
+  mynames = names(row);
+  if(row$my.units == "cm")
+    {
+    for(c in 1:ncol)
+      {
+      myname = mynames[c];
+      if(!is.element(myname, skip))
+        {
+        myval = unlist(row[c]);
+        print(paste0("r: ",r, " c: ", c," ... old: ",myval, "  ", is.numeric(myval), "   "));
+        if(is.numeric(myval))
+          {
+          newval = myval / 2.54; # 2.54 cm = 1 in
+          measure.data[r,c] = newval;
+  print(paste0(" --> ",newval));
+          }
+        }
+      }
+    }
+  }
+
+
+
+```
+
+
+```{r}
+
+
+measure.short = measure.data[,c(1,2,4:6,17,24,27:49)];
+myNames = gsub(".NA","", colnames(measure.short), fixed=TRUE);
+colnames(measure.short) = myNames;
+colnames(measure.short)[11] = "eye.color";
+#View(measure.short)
+# 1 = data collector, 2 = person id (might need), 4 = height, 7 = arm.span.NA, 9 = units, 21 = hand length, 22 = hand.width, 24 = arm.reach, 25 = foot.length
+measure.df = removeDuplicatesFromDataFrameAllColumns(measure.short);
+
+measure.df = subsetDataFrame(measure.df, "my.gender", "==", "m")
+#measure.df[measure.df$gender=="male"] == "m";
+measure.df = subsetDataFrame(measure.df, "age", ">=", 18)
+measure.df = subsetDataFrame(measure.df, "age", "<=", 28)
+
+
+
+measure.ndf = measure.df[, c(2,3,6,23,19,20,14,13)];
+is.num = sapply(measure.ndf, is.numeric);
+measure.ndf[is.num] = lapply(measure.ndf[is.num], round, 2);
+
+
+measure.ndf = na.omit(measure.ndf);
+set.seed(123)
+rows=sample(1:(nrow(measure.ndf)),50, replace = TRUE, prob = NULL)
+measure.fdf = measure.ndf[rows,]
+
+
+View(measure.fdf)
+
+
+
+```
+
+
+

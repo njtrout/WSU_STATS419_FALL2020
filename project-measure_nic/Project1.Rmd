@@ -1,0 +1,129 @@
+---
+title: "Project1"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE);
+knitr::opts_chunk$set(warning = FALSE);
+knitr::opts_chunk$set(message = FALSE);
+```
+
+```{r}
+library(measurements)
+nbadata = read.csv("C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/nbadata.txt", sep ="\t", header = TRUE);
+
+nba.df = prepareDataNBA(nbadata)
+```
+
+#### Measure
+```{r, chunck-correlation-measure-instructor}
+library(humanVerseWSU); 
+library(devtools);
+measure.nic = read.csv("C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/WEEK-05/mymeasure.xlsx-638a5521dbd68a51c27d3ad83528231f.txt", sep ="|", header = TRUE);
+
+getOne = c("hand.length", "hand.width", "hand.elbow", "elbow.armpit", "arm.reach", "foot.length", "floor.kneepit", "floor.hip", "floor.armpit");
+n.rows = dim(measure.nic)[1];
+
+
+for(one in getOne)
+  {
+  measure.nic[one] = NA;
+  }
+  
+for(i in 1:n.rows)
+  {  
+  measure.row = measure.nic[i,];
+  for(one in getOne)
+    {
+    nidx = getIndexOfDataFrameColumns(measure.nic, one);
+    
+    myleft = paste0(one,".left");
+      lidx = getIndexOfDataFrameColumns(measure.row, myleft);
+    myright = paste0(one,".right");
+      ridx = getIndexOfDataFrameColumns(measure.row, myleft);
+    
+      print(paste0(
+                  "left: ",myleft," --> ",lidx,
+                  " right: ",myright," --> ",ridx
+                  )
+            );
+      
+      row.m = mean(
+            c(as.numeric(unlist(measure.row[lidx])),
+            as.numeric(unlist(measure.row[ridx]))),
+            na.rm=TRUE);
+      
+    measure.nic[i,nidx] =  row.m;
+    }
+  }
+
+str(measure.nic); # lot's of columns ...
+
+```
+
+```{r, correlation}
+
+measure.cor = measure.nic[,c(5,6,7,8,9,10)];
+
+round( cor(measure.cor), digits=2);
+    symnum( cor(measure.cor), 
+            diag = TRUE,
+            corr = TRUE,
+            cutpoints=c(0.15,0.30,0.60,0.90), 
+            symbols = c(" ",".","*","**","***") 
+          ); 
+    corrplot::corrplot( (cor(measure.cor)) ); 
+```
+
+```{r, hclust-of-height}
+X = removeColumnsFromDataFrame(measure.nic,"notes");
+
+rownames(X) = measure.nic$height.NA;
+
+methods = c("complete", "average", "single", "median", "centroid", "ward.D", "ward.D2", "mcquitty");
+
+for(method in methods)
+  {
+  time.start = Sys.time();  
+      X.hclust = hclust( dist(X), method=method);
+  plot(X.hclust);
+  time.end = Sys.time();
+  elapse = sprintf("%.3f", as.numeric(time.end) - as.numeric(time.start));
+  print(paste0(elapse, " secs to complete method ... ", method));
+  }
+
+```
+
+```{r, pvclust}
+library(pvclust)
+X = removeColumnsFromDataFrame(measure.nic,"notes");
+methods = c("complete", "average", "single", "median", "centroid", "ward.D", "ward.D2", "mcquitty")
+as.data.frame(measure.nic)
+View(measure.nic)
+clean_measure = measure.nic[,c(4:26)] 
+clean_measure2 = measure.nic[,c(38:46)]
+clean_data = merge(clean_measure,clean_measure2)
+
+clean_data = subset(clean_data, select = -c(floor.navel.NA, hand.elbow.left, hand.elbow.right) )
+View(clean_data)
+
+for(method in methods)
+  {
+  time.start = Sys.time();
+      X.pvclust = pvclust (clean_data, method.hclust=method);
+  
+  plot(X.pvclust);
+  
+      pvrect(X.pvclust);
+  time.end = Sys.time();
+  elapse = sprintf("%.3f", as.numeric(time.end) - as.numeric(time.start));
+  print(paste0(elapse, " secs to complete method ... ", method));
+  }
+
+
+```
+
+
+
+

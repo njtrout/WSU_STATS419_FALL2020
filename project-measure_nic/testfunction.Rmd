@@ -1,0 +1,341 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    toc: true
+    toc_depth: 3 
+    number_sections: true
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+    
+title: "A boring (academic) title or a clever title?"
+subtitle: "A secondary title"
+author: 
+- name: "YOUR NAME HERE"
+  affiliation: "Washington State University"
+keywords: |
+    multiple comparisons to control; multivariate chi-square distribution; nonlinear growth curves; Richard's curve; simulated critical points
+abstract: |
+  In this article we compare the \emph{empirical characteristic function} \citep{Tukey:1977, Becker:1988} to a \emph{moment-generating-functional form} to compute the proportion of hypotheses $m$ that are rejected under the null hypothesis. \vspace{0.25in}
+
+  \noindent Here is a second paragraph of the abstract (if necessary), and with the pipe notation it doesn't break. Notice it still needs to be indented. \vspace{0.25in}
+
+  \noindent Generally, we write this abstract last.  Often it is called the executive summary. It should succinctly summarize the entire document.  You can include references such as this one to the Appendices section \ref{sec:appendix} if necessary.
+sectionnumberdepth: 3
+titleEndnotes: "ENDNOTES"
+titleReferences: "REFERENCES"
+columnsReferences: 2
+titleTOC:  "TABLE OF CONTENTS"
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\section{Introduction}
+\label{sec:intro}
+
+\newpage
+
+\begin{figure}[!ht]
+	\hrule
+	\caption{ \textbf{One image} }
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/oneimage.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\hrule
+\end{figure}
+
+On the left represents ...
+
+\newpage
+
+
+
+
+\section{Research Question:  What is my primary question}
+\label{sec:rq}
+
+How do NBA players differ from average people?
+
+\subsection{What is my secondary question}
+\label{sec:rq2}
+
+My secondary question is to see if NBA players hand width proportion to height extremely differs when looking and hand width proportions to height for the measurement on students volunteers? 
+
+\subsection{What is my other secondary question}
+\label{sec:rq3}
+
+My other secondary question is to see what measurements are the strongest correlation of people I voluntarily measured when it comes to hand width, with other body parts?  
+
+\section{Data Description}
+\label{sec:data}
+
+The collection of my data was done via a handout I made. This handout took various measurements and questions regarding things like height, weight, length, dominant hand, etc. I went about collecting this data via email. My data was targeted towards family and closed friends. This data was targeted toward family and friend as there is a pandemic... The data was then merged with the rest of my class data that consist of other students measures that they preformed on volunteers. 
+
+https://www.nba.com/stats/draft/combine-anthro/
+When searching for data I went to google and found the NBA website with useful data that related to my measurements I took. The data I used was specifically for 2019 NBA rookies. Some of the data did need cleaning and and all measurements were converted to inches.  
+
+
+\subsection{Summary Statistics of Data}
+\label{sec:data-summary}
+
+\subsection{Summary Statistics of NBA}
+\label{sec:data-summary-nba} 
+
+When looking at the correlation of NBA players measurements, the standing arm reach and height have the highest correlation at 96%. There are many other high correlated variables such as wingspan and standing reach with a 95% correlation, wingspan and height with a 90% correlation, wing span and hand length with a 88% correlation, and lastly the standing reach and hand length have a 84% correlation. Standing reach and height ended up having the least correlation at 51%.
+
+\input{tables/nba-correlation-table}             
+
+\subsection{Summary Statistics of MEASURE}
+\label{sec:data-summary-measure} 
+
+When looking at the measure of students volunteers there seems to be the strongest correlation between standing arm reach and height at 97%. Secondly, the hand length quite a high correlation at 89%. Looking at what measurements correlate the least it would be students arm reach and hand width with a 55% correlation. 
+
+\input{tables/measure-students-correlation-table} 
+
+
+\section{Key Findings}
+\label{sec:findings}
+
+I think some key findings were bad data that was duplicated. Proportionally NBA rookies have smaller height in hand proportions, this is because they have larger hands therefore smaller height proportions then students when compared to hand size
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+When looking at the volunteers for the measure data I found that the highest correlated variables were standing reach and height. The highest correlated variables for the NBA rookies were also standing reach and height. When comparing NBA hand size proportions you can see the NBA players have a lower height proportion than the measure volunteers. Thus meaning NBA players have large hands compared to measure volunteers. Lastly, NBA rookies have larger means implying they're overall just bigger people. 
+
+I concluded that the NBA has a precise and very accurate way for measuring players and the measurements taken by students may very. That is due to some students not understanding how to take the correct measure. But it also appears some students have fabricated their data with minor changes to their data. Therefore, re evaluation of with better data may come out with different results.
+
+.. how can I make it better next time?
+
+how I would make it better in appendix
+
+
+
+\newpage
+
+
+\newpage
+\section{APPENDICES}
+\label{sec:appendix}
+
+\subsection{Data Provenance}
+\label{sec:appendix-data-provenance}
+
+add NBA data link
+talk about what would make this better next time
+
+I made my handout and sent it out to 10 people to get the specific measurements shown in the handout. I then made their data anonymous with a bitly generator. After that I merged my data with classmates data to have a larger dataset. I then went on to randomly select 50 males to correlate and compare my NBA rookie data to as there are not women who play in the NBA. I also looked in to how hand width proportionally relates to height. In my data there were all different ages so I narrowed my ages down to 18-28 as those are the more likely ages to be a rookie in the NBA. I found some people miss entered or miss measured their data, in one case it was the arm reach. When standing some would measure from shoulder to finger tip whereas that measure should be from the ground to finger tip. With that I filtered out those who measured the standing reach to be shorter than the height. Another issue was some columns had only one hand measured so I took the left and rights averaging them to create and single column. If there was only one measurement like only left hand length, that would be selected. Out of all the measurements I decided to look into the hand width, hand length, height, wingspan, and standing reach.
+
+When looking deeper into the data I found some more anomalies that caused my data to be skewed. My professor found corrupt data where some students had entered some bad data and the data was fabricated. With that our professor helped through the cleanup process narrowing down from about 450 to 251 people from there I was able to re apply all of my changes such as age restrictions, investigating of only males, removed unused columns, etc. I finally ended up with 42 student volunteers to compare with my NBA rookies. The clean up process can  be found at <<<<<LINK>>>>>
+
+When cleaning my NBA data I chose to look into hand width, hand length, height, wingspan, and standing arms reach. For this data I had to convert from feet and inches to just inches. I then decided to look into if NBA players and our volunteers are abnormally proportional to other parts of their body such as hand width relative to their height. I chose to take proportions of hand width as I think larger hands give a leverage in basketball so it would be interesting to see how large these proportions are compared to the average person. I found that on average NBA rookies are one whole hand size larger. That meaning that they are either just bigger people in general or have abnormally large hands. Looking at the means of each you can see that proportionally they are just larger people. 
+T val > 0.5 therefore not significant.
+
+Moving forward if I were to re create this project I would make strict restrictions on how to measure certain measurements. As I have stated the NBA goes 
+
+
+
+
+\newpage
+\subsubsection{Data Collection Handout}
+\label{sec:appendix-data-handout}
+
+\begin{figure}[!ht]
+	\hrule
+	\caption{ \textbf{Handout Page 1} }
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/handout1.pdf} }
+	\end{center}
+	\label{fig:handout-1}
+	\hrule
+\end{figure}
+
+
+\newpage
+
+\begin{figure}[!ht]
+	\hrule
+	\caption{ \textbf{Handout Page 2} }
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/handout2.pdf} }
+	\end{center}
+	\label{fig:handout-2}
+	\hrule
+\end{figure}
+
+
+
+\subsection{Preparing the Report Workspace as a subsection}
+\label{sec:appendix-setup}
+
+\subsubsection{Preparing the Report Workspace as a subsubsection}
+\label{sec:appendix-setup2}
+
+\paragraph{Preparing the Report Workspace as a paragraph}
+\label{sec:appendix-setup3}
+
+\subparagraph{Preparing the Report Workspace as a subparagrah}
+\label{sec:appendix-setup4}
+
+Below is the necessary functions and libraries required to run the code referenced in this document.
+
+```{r,appendix-setup,message=FALSE}
+library(devtools);       # required for source_url
+library(humanVerseWSU)
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+path.github = "https://raw.githubusercontent.com/njtrout/WSU_STATS419_FALL2020/"
+source_url( paste0(path.github,"master/functions/functions-project-measure.R") )
+
+path.project = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/";
+
+path.to.secret = "C:/Users/Nic Trout/Desktop/";
+
+measure = readRDS(paste0(path.to.secret, "final.measure.rds"));
+
+nbadata = read.csv("C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/project-measure_nic/nbadata.txt", sep ="\t", header = TRUE);
+
+nba.df = prepareDataNBA(nbadata);
+measure.df = prepareMeasureData(measure);
+proportions = getProportionHandWidthMeasure(measure.df);
+proportionsNBA = getProportionHandWidthNBA(nba.df);
+
+summary(measure.df)
+summary(nba.df)
+summary(proportions)
+summary(proportionsNBA)
+
+```
+
+Below is the code to generate the summary statistics and save them as a table that you see in Section \ref{}.
+
+```{r, plots-and-ttest}
+#height vs standing reach
+plotcorrS(       x.m = measure.df$height,
+                     y.m = measure.df$standing.reach,
+                     x.n = nba.df$height,
+                     y.n = nba.df$standing.reach,
+                     xl = "height",
+                     yl = "standing.reach")
+#height-vs-hand width
+
+plotcorrS(       x.m = measure.df$height,
+                     y.m = measure.df$hand.width,
+                     x.n = nba.df$height,
+                     y.n = nba.df$hand.width,
+                     xl = "height",
+                     yl = "hand.width")
+
+
+#height-vs-wingspan
+plotcorrS(       x.m = measure.df$height,
+                     y.m = measure.df$wingspan,
+                     x.n = nba.df$height,
+                     y.n = nba.df$wingspan,
+                     xl = "height",
+                     yl = "wingspan")
+
+#nba proportions, height to arm reach
+plotcorrS(           x.m = proportions$measure.height.proportion,
+                     y.m = proportions$measure.armreach.proportion,
+                     x.n = proportionsNBA$nba.df.height.proportion,
+                     y.n = proportionsNBA$nba.df.armreach.proportion,
+                     xl = "height",
+                     yl = "wingspan")
+
+
+#t.test on measure proportions of height and arm reach (yes significance)
+t.test(proportions$measure.height.proportion, proportions$measure.armreach.proportion, alternative = "two.sided", var.equal = FALSE)
+
+#t.test on NBA proportion height and NBA arm reach proportions
+t.test(proportionsNBA$nba.df.height.proportion, proportionsNBA$nba.df.armreach.proportion, alternative = "two.sided", var.equal = FALSE)
+
+# t.test on nba proportion height and measure proportions arm reach 
+t.test(proportionsNBA$nba.df.height.proportion, proportions$measure.armreach.proportion, alternative = "two.sided", var.equal = FALSE)
+
+#t.test on measure height vs measure wingspan (yes significance)
+t.test(measure.df$height, measure.df$standing.reach, alternative = "two.sided", var.equal = FALSE)
+
+#t.test of measure hand widths and measure standing reach, p value small (yes significance)
+t.test(measure.df$hand.width, measure.df$standing.reach, alternative = "two.sided", var.equal = FALSE)
+
+#t.test of NBA height and NBA standing reach 
+t.test(nba.df$height, nba.df$standing.reach, var.equal = FALSE)
+
+#t.test of NBA height and NBA hand width
+t.test(nba.df$height, nba.df$hand.width, var.equal = FALSE)
+
+#t.test of NBA height and NBA wingspan
+t.test(nba.df$height, nba.df$hand.width, var.equal = FALSE)
+
+```
+
+
+```{r, boxplots-handproportions}
+par(mfrow =c(1,4));
+
+miny = min(proportionsNBA$nba.df.height.proportion, proportions$measure.height.proportion, na.rm = TRUE);
+
+maxy = max(proportionsNBA$nba.df.height.proportion, proportions$measure.height.proportion, na.rm = TRUE);
+
+boxplot(proportionsNBA$nba.df.height.proportion, main = "NBA", ylim = c(miny,maxy), ylab = "inches", frame.plot = FALSE);
+
+boxplot(proportions$measure.height.proportion, main = "MEASURE", ylim = c(miny,maxy), ylab = "", frame.plot = FALSE, yaxt = "n");
+
+boxplot(measure.df$hand.width, main = "MEASURE HAND WIDTH", ylim = c(miny,maxy), ylab = "", frame.plot = FALSE);
+
+boxplot(nba.df$hand.width, main = "NBA HAND WIDTH", ylim = c(miny,maxy), ylab = "", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+#nba height proportions vs nba hand width
+t.test(proportionsNBA$nba.df.height.proportion, nba.df$hand.width, alternative = "two.sided", var.equal = FALSE)
+
+#hand widths correlate 
+t.test(nba.df$hand.width, measure.df$hand.width, alternative = "two.sided", var.equal = FALSE)
+
+```
+
+```{r, hclust-nbaplayers}
+
+source_url( paste0(path.humanVerseWSU,"master/humanVerseWSU/R/functions-EDA.R") );
+
+Xs = scale(nba.df[,c(1,2,3,4,5)])
+rownames(Xs) = nba.df$players           
+perform.hclust(Xs,12)
+
+
+```
+```{r, hclust-nba}
+
+source_url( paste0(path.humanVerseWSU,"master/humanVerseWSU/R/functions-EDA.R") );
+
+Xs = scale(nba.df[,c(1,2,3,4,5)])
+Xs = transposeMatrix(Xs)
+perform.hclust(Xs,3)
+
+
+```
+
+```{r, hclust-measure}
+
+source_url( paste0(path.humanVerseWSU,"master/humanVerseWSU/R/functions-EDA.R") );
+
+Xs = scale(measure.df[,c(1,2,3,4,5)])
+Xs = transposeMatrix(Xs)
+perform.hclust(Xs,3)
+
+
+```
