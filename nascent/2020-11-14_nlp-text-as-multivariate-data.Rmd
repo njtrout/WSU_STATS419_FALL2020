@@ -1,0 +1,82 @@
+---
+title: 'R Notebook: natural language processing (text as multivariate data)'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+include.me = paste0(path.github, "misc/functions-nlp.R");
+# source_url( include.me );
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "C:/Users/Alexander Nevsky/Dropbox/WSU-419/Fall 2020/__student_access__/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+
+```
+
+# Natural Language Processing
+
+There was quite a bit of interest on this topic.  How can we perform multivariate analysis on text.  Most think of data as numbers, but text is certainly data and certainly multivariate.
+
+Below is an email I recently sent to a student not in our program which stands as a good summary of the topic.
+
+<pre style="white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;">
+Hi M****,
+
+I am in the process of building a few "NLP" notebooks for my class.  I can share those with you in a few weeks.
+
+I have used python in the past for a large project, but it seems like R has more than caught up.
+
+I am leaning towards the package quanteda, but there are several libraries out there:
+
+https://quanteda.io/articles/pkgdown/comparison.html
+
+I like this library because it looks like it is "most hackable" - I have developed a custom NLP-LSA approach and believe I can plug it into this library.
+
+This link compares two books "Sense and Sensibility" and "Moby Dick" ....   A good walk through on some basics of NLP.
+
+https://quanteda.io/articles/pkgdown/replication/digital-humanities.html
+
+I think those two links should help you get started.
+</pre>
+
+## Choosing "quanteda"
+
+I have reviewed and tested 3 packages available in R.  I will want to do my own thing often, and so the package needs to be "hackable".  For example, I may want to add my own collection of stop words.  Or I may want to write my own "n-gram" text processing algorithm.  Such elements are things I performed on a "concept-search engine" using patent data to answer the question:  "is your idea patentable?"  This topic will be an (optional) mastery notebook coming soon.
+
+
+
+```{r}
+## Remember that RStudio links to some files and makes "installation" a bit more difficult than it needs to be.  I would recommend closing RStudio and installing the packages in RGui, then come back to RStudio to use them.
+
+
+library(devtools);
+
+library(quanteda);  # install.packages("quanteda", dependencies=TRUE); 
+library(quanteda.corpora); # devtools::install_github("quanteda/quanteda.corpora");
+library(quanteda.textmodels); # install.packages("quanteda.textmodels", dependencies=TRUE); 
+library(LIWCalike); # devtools::install_github("kbenoit/LIWCalike");
+
+
+```
+
+
