@@ -1,0 +1,135 @@
+--- 
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    toc: true
+    toc_depth: 3 
+    number_sections: true
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+    
+title: "Will Smith VS Denzel Washington"
+subtitle: "Which Actor is better?"
+author: 
+- name: "Nic Trout"
+  affiliation: "Washington State University"
+keywords: |
+    Plot and Boxplots
+abstract: |
+  \noindent To describe who is a better actor, Will or Denzel?
+sectionnumberdepth: 3
+titleEndnotes: "ENDNOTES"
+titleReferences: "REFERENCES"
+columnsReferences: 2
+titleTOC:  "TABLE OF CONTENTS"
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\section{Introduction}
+\label{sec:intro}
+
+Who is better, Will Smith or Denzel Washington? I guess you could also ask what makes one person better then the other? With this data set there are many different factors to consider with these actors to define who is really better. Those factors being things like their profits, budgets, world gross profits, popularity, ratings, and metacritic. Yet, just because someone make more money then the other does it really make them better? I personally think it is a combination of things and there is not just one thing that can define you to make you better then another person. Good ethics, intentions, and the combination of profits, ratings, and metacritic is a great measure if one person is better than the other.
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/oneimage.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{One Image Description:} This shows Will and Denzels Return on Investment on the left and on the rights shows a boxplot of Will and Denzels top top movies income.}
+	\hrule
+\end{figure}
+
+
+\section{Research Question:  What is my primary question}
+\label{sec:rq}
+Who is better, Will Smith or Denzel Washington?
+
+\section{Data Description}
+\label{sec:data}
+This data was scraped from the IMDB website by Monte Shaffer in the Fall semester of 2020. It is 50Mb and contains about 10,000 movies with their movie rank, year, title, genre, rated, rating, minutes, metacritic, votes, millions, paragraph, country, language, release date, budget, and productions companies. From there this data was narrowed into the top 2000 movies. Where I looked into Will Smiths movies and Denzel Washington movies to examine deeper into who is really better? Parts of my analysis were done with the whole data set but will be pointed out when that is the case and when I use the top2000 movies.
+
+\subsection{Summary of Sample}
+\label{sec:data-sample}
+This sample of data I used observes many things from the IMDB website. The year, budget, title, profits, ratings, actors, metacritics, and ranks of movies/actors. 
+
+\subsection{Summary Statistics of Data}
+\label{sec:data-summary}
+For the summary of statistics I used boxplots, plots, and some t test to confirm relationships between Will and Denzel. I looked at boxplots of ratings, metacritics, and ROI. I used plots to observe money and I ran a couple t test to back my findings between boxplots.
+
+\section{Key Findings}
+\label{sec:findings}
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/ROI.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{Return on investment:} This represents Will (on the left) and Denzels (on the right) return on investment.}
+	\hrule
+\end{figure}
+
+Return on investment represents the financial benefit from an investment. This was calculated by taking the net benefits of movies and dividing by the total cost. I felt as the ROI could explain a lot. So I decided to look into how much Will and Denzel were making on these investments. I chose to look into the top 2000 movies and of those movies, Will has 19 movies in the top 2000 and Denzel has 18 in the top 2000 movies. Of those I found overall Will has a higher ROI by quite a bit. This some what makes sense as Will has preformed more overall movies and he also has his foot in the door in Hollywood. This makes me wonder, is there money laundering going on? Or do some movies just happen to catch society attention more than others? I also found that Will has a larger budget to spend so that I think is a big factor to why he gets a bigger return. Wills budget on average was 100 million whereas Denzels was closer to 45 million, so about half. With that, I don't think it is fair to say that an ROI is a deciding factor on if someone is better than the other. Yet, I think it shows that Will Smith may be a better movie star but not necessarily a better person. I think this also has influence to show that Will Smith does play in more movies or has some shady business going on because can still be a movie star making a lot of movie and be a bad person.
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/metacritic.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{Metacritic:} This represents the ratings of Metacritic.}
+	\hrule
+\end{figure}
+
+
+Metacritic is a website that generates reviews on films, TV shows, music, and much more. Those ratings being weighted scores. For these the website scrapes the web to find movie critics and sum those ratings. Metacritic is a reliable source that has links to all sources to prove where the ratings are coming from. With that I felt like this would be a huge telling on who is better. So I used the whole data set and not just the top2000 movies. I then went on plot the metacritic ratings to see who scored higher and you can see that Denzel's ratings are higher overall and on average.
+
+\newpage 
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/ratings.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{Ratings:} This represents the ratings from IMDB.}
+	\hrule
+\end{figure}
+
+These rating represent the IMDB rating. This is on a scale of 1-10 and from this you can see once again Denzel has a higher rating. Denzels average rating is about 7 whereas Wills average rating is about 6. I also found it interesting that Will has some outliars around 2 and 4 whereas Denzel does not. Thus, meaning that there were some people that did not like Will or his movies.
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/money.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{Money:} This represents the money made.}
+	\hrule
+\end{figure}
+
+This observations was done over the the popular movies as I was curious after looking into the ROI, how much money Will and Denzel were making? Looking at all my data I focused on it after it was inflated to the year 2000. I found it interesting that Will's money is decreasing throughout his career, meaning that he has made less throughout the years. Whereas Denzel shows an increase in slope meaning throughout his career he has had made an increase in money.
+
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Will has larger movie budget then Denzel so in my opinion he should make more money and have a bigger ROI. But just cause you make more money does not make you better. Being better then someone is very vague but is not defined by income as much as it does influence. Those who are influential to the community and those around them are better people than those who don't. Thus, I think the metacritic and ratings have a bigger influence on deciding whether someone was a good actor. Plus, the data shows Denzel is ranked higher as an actor, as well as for metacritic votes. This leads me to believe that Denzel may be the better actor. Those who make a lot of money in Hollywood could be a great movie star and still be hated by many. Therefore, not a "better" person because we all know that money can influence the good, bad, and ugly. Overall, I think its fair to say money does not define a good or bad person but ranks and ratings give a more precise representation of who the better person is. 
+
+Lastly, I think it is interesting that Will's money made has been steadily decreasing. Where Denzels continues to grow. I think that this could be that Denzel is picky about who he does his movies with unlike Will who may take any movie, good or bad. Which makes me think that this may be another reason that Will has a lower ratings. He will take and do any movie if it is good or bad whereas Denzel appears to pick and choose wisely. With that I conclude that Denzel Washington is a overall better actor than Will Smith.
+
+
+
+

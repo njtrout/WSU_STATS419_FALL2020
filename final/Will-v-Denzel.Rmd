@@ -1,0 +1,426 @@
+--- 
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: true
+    toc: true
+    toc_depth: 3 
+    number_sections: true
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+    
+title: "Will Smith VS Denzel Washington"
+subtitle: "Which Actor is better?"
+author: 
+- name: "Nic Trout"
+  affiliation: "Washington State University"
+keywords: |
+    Boxplot, Correlation Table, T tests
+abstract: |
+  \noindent To describe who is a better actor, Will or Denzel?
+sectionnumberdepth: 3
+titleEndnotes: "ENDNOTES"
+titleReferences: "REFERENCES"
+columnsReferences: 2
+titleTOC:  "TABLE OF CONTENTS"
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\section{Introduction}
+\label{sec:intro}
+
+
+
+
+\begin{figure}[!ht]
+	\hrule
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/oneimage.pdf} }
+	\end{center}
+	\label{fig:oneimage-1}
+	\caption{ \textbf{One Image Description:} On the left represents a NBA rookies hand width vs height proportions of hand. On the right you can see your average Joe (the student volunteers measured).}
+	\hrule
+\end{figure}
+
+
+
+\section{Research Question:  What is my primary question}
+\label{sec:rq}
+Who is better, Will Smith or Denzel Washington?
+
+
+\section{Data Description}
+\label{sec:data}
+
+
+
+
+\subsection{Summary of Sample}
+\label{sec:data-sample}
+
+
+
+
+\subsection{Summary Statistics of Data}
+\label{sec:data-summary}
+
+ 
+
+\section{Key Findings}
+\label{sec:findings}
+
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+
+\newpage
+
+
+
+```{r, setup, include=FALSE}
+
+library(devtools);       # required for source_url
+library(humanVerseWSU);
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-str.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-stack.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-pos.R");
+
+source_url = paste0(path.humanVerseWSU,"humanVerseWSU/R/functions-encryption.R");
+
+path.to.final = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/final/";
+
+```
+
+```{r, data, include=FALSE}
+library(imdb);
+
+imdb::loadDataIMDB();
+names(imdb.data);
+
+humanVerseWSU::loadInflationData();
+
+path.to.nascent = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/nascent/";
+
+top2000 = readRDS(paste0(path.to.nascent, 'movieRank2000.rds'));
+
+```
+
+
+```{r}
+
+top2000$budget = as.numeric(top2000$budget)/1000000;
+
+top2000 = standardizeDollarsInDataFrame(top2000, 2000, "budget", "year", "budget2000");
+
+top2000$budget2000s = 100*(top2000$budget2000/max(top2000$budget2000, na.rm = TRUE));
+
+budget = removeAllColumnsBut(top2000,c("year","budget", "budget2000", "budget2000s", "ttid", "title"));
+
+```
+
+```{r}
+
+
+top2000$world.gross = as.numeric(top2000$world.gross)/1000000;
+
+top2000 = standardizeDollarsInDataFrame(top2000, 2000, "world.gross", "year", "world.gross2000");
+
+top2000$world.gross2000s = 100*(top2000$world.gross2000/max(top2000$world.gross2000, na.rm = TRUE));
+
+world.gross = removeAllColumnsBut(top2000,c("year","world.gross", "world.gross2000", "world.gross2000s", "ttid", "title"));
+
+
+my.df = merge(budget,world.gross,by="ttid");
+
+my.df$profit = my.df$world.gross2000 - my.df$budget2000;
+
+my.df$ROI = my.df$profit/my.df$budget2000;
+
+
+```
+
+```{r}
+will.budget = merge(will.movies[,c(1,5)], budget, by = "ttid"); #19/111
+will.median = median(will.budget$budget2000, na.rm = TRUE);
+will.top = will.budget$ttid
+will.ROI = merge(will.movies[,c(1,5)], my.df, by = "ttid"); #19/111
+
+
+denzel.budget = merge(denzel.movies[,c(1,5)], budget, by = "ttid"); #18/61
+denzel.median = median(denzel.budget$budget2000, na.rm = TRUE);
+denzel.top = denzel.budget$ttid
+denzel.ROI = merge(denzel.movies[,c(1,5)], my.df, by = "ttid"); #18/61
+
+
+boxplot(will.budget$budget2000, denzel.budget$budget2000);
+boxplot(will.budget$budget2000s, denzel.budget$budget2000s);
+
+t.test(will.budget$budget2000,denzel.budget$budget2000);
+
+boxplot(will.ROI$ROI, denzel.ROI$ROI,main = "Will vs Denzel ROI", ylab = "ROI");
+
+#t.test(will.ROI$ROI, denzel.ROI$ROI);
+
+
+par(mfrow =c(1,2));
+
+boxplot(will.budget$budget2000, main = "Will vs Denzel Budgets", ylim = c(0, 175), ylab = "budget", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.budget$budget2000, main = "", ylim = c(0, 175), ylab = "", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+par(mfrow =c(1,2));
+
+boxplot(will.ROI$ROI, main = "Will vs Denzel ROI", ylim = c(0, 10), ylab = "", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.ROI$ROI, main = "", ylim = c(0, 10), ylab = "ROI", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+
+```
+
+
+
+### Rankings: Lots of Ways to Internally Rank
+```{r, data-clean-up}
+
+will.search = IMDB.searchPersonName("Will* Smith*");
+
+will.search;
+
+will.nmid = will.search$nmid[1];
+will.nmid = "nm0000226";
+will.movies = IMDB.getMoviesForPerson(will.nmid);
+will.movies;
+will.movies = standardizeDollarsInDataFrame(will.movies, 2000, "millions", "year", "millions2000");
+will.movies.ttid = will.movies$ttid;
+
+
+will.not.top = setdiff(will.movies.ttid, will.top);
+will.movies$top = "NOT (92)";
+#will.movies$top[will.movies$ttid==will.top];
+comparison.will = c();
+for(i in 1:111)
+{
+  if(is.element(will.movies$ttid[i], will.top))
+  {
+    comparison.will = c(comparison.will,i)
+  }
+}
+will.movies$top[comparison.will] = "Top 50 of year (n=19)";
+
+boxplot(millions2000~top,data = will.movies, main = "Income of top vs non-top movies Will", ylim = c(0, 340), frame = F);
+
+
+```
+
+```{r}
+
+
+
+denzel.search = IMDB.searchPersonName("Denzel* Washington*");
+
+denzel.nmid = denzel.search$nmid[1];
+denzel.nmid = "nm0000243";
+denzel.movies = IMDB.getMoviesForPerson(denzel.nmid);
+denzel.movies;
+denzel.movies.ttid = denzel.movies$ttid;
+
+
+denzel.movies = standardizeDollarsInDataFrame(denzel.movies, 2000, "millions", "year", "millions2000");
+
+
+will.movies = standardizeDollarsInDataFrame(will.movies, 2000, "millions", "year", "millions2000");
+
+
+denzel.movies.p50 = intersect(denzel.movies.ttid, imdb.data$movies$popular50$ttid);
+
+
+will.movies.p50 = intersect(will.movies.ttid, imdb.data$movies$popular50$ttid);
+
+denzel.not.top = setdiff(denzel.movies.ttid, denzel.top);
+denzel.movies$top = "NOT (n=43)";
+#denzel.movies$top[denzel.movies$ttid==denzel.top];
+comparison.denzel = c();
+for(i in 1:61)
+{
+  if(is.element(denzel.movies$ttid[i], denzel.top))
+  {
+    comparison.denzel = c(comparison.denzel,i)
+  }
+}
+denzel.movies$top[comparison.denzel] = "Top 50 of year (n=18)";
+
+par(mfrow = c(1,2));
+
+boxplot(millions2000~top,data = will.movies, main = "Will", ylim = c(0, 340), frame = F);
+boxplot(millions2000~top,data = denzel.movies, ylim = c(0, 340), main = "Denzel", frame = F);
+
+par(mfrow = c(1,1));
+
+denzel.p50 = subsetDataFrame(denzel.movies, mycols = "votes" , comparison = ">", myvals = 110000);
+
+will.p50 = subsetDataFrame(will.movies, mycols = "votes" , comparison = ">", myvals = 170000);
+
+
+denzel.movies;
+will.movies;
+
+denzel.movies.p50;
+will.movies.p50;
+#this shows will killing it
+t.test(will.movies$millions2000[comparison.will], denzel.movies$millions2000[comparison.denzel]);
+#this shows they are equal on bad movies
+t.test(will.movies$millions2000[-comparison.will], denzel.movies$millions2000[-comparison.denzel]);
+
+```
+
+```{r, money-plots}
+
+par(mfrow =c(1,2));
+
+boxplot(will.movies$millions2000, main = "Will vs Denzel Money", ylim = c(0, 375), ylab = "", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.movies$millions2000, main = "", ylim = c(0, 375), ylab = "Millions(2000)", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+par(mfrow =c(1,2));
+
+boxplot(will.p50$millions2000, main = "Will vs Denzel Popular 50", ylim = c(0, 375), ylab = "", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.p50$millions2000, main = "", ylim = c(0, 375), ylab = "Millions(2000)", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+plot(denzel.movies$year, denzel.movies$millions2000, pch = 10, cex = 0.75, main = "Denzel's Money in Millions Adjusted(2000)", xlab = "Year", ylab = "Millions", bty = "n", xlim = c(1980,2019), ylim = c(0, 375));
+reg.m = lm(denzel.movies$millions2000~denzel.movies$year);
+abline(reg.m, col= "blue");
+
+plot(will.movies$year, will.movies$millions2000, pch = 10, cex = 0.75, main = "Will's Money in Millions Adjusted(2000)", xlab = "Year", ylab = "Millions", bty = "n", xlim = c(1980,2019), ylim = c(0, 375));
+reg.m = lm(will.movies$millions2000~will.movies$year);
+abline(reg.m, col= "blue");
+
+plot(denzel.p50$year, denzel.p50$millions2000, pch = 10, cex = 0.75, main = "Denzel's Popular 50 Money in Millions Adjusted(2000)", xlab = "Year", ylab = "Millions", bty = "n", xlim = c(1980,2019), ylim = c(0, 375));
+reg.m = lm(denzel.p50$millions2000~denzel.p50$year);
+abline(reg.m, col= "blue");
+
+plot(will.p50$year, will.p50$millions2000, pch = 10, cex = 0.75, main = "Will's Popular 50 Money in Millions Adjusted(2000)", xlab = "Year", ylab = "Millions", bty = "n", xlim = c(1980,2019), ylim = c(0, 375));
+reg.m = lm(will.p50$millions2000~will.p50$year);
+abline(reg.m, col= "blue");
+
+```
+
+
+```{r, ratings-plots}
+par(mfrow =c(1,2));
+
+boxplot(will.movies$ratings, main = "Will vs Denzel Ratings", ylim = c(0, 10), ylab = "ratings", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.movies$ratings, main = "", ylim = c(0, 10), ylab = "ratings", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+par(mfrow = c(1,1));
+
+par(mfrow =c(1,2));
+
+boxplot(will.p50$ratings, main = "Will vs Denzel Popular 50 Ratings", ylim = c(0, 10), ylab = "ratings", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.p50$ratings, main = "", ylim = c(0, 10), ylab = "ratings", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+plot(denzel.movies$year, denzel.movies$ratings, pch = 10, cex = 0.75, main = "Denzel's Ratings", xlab = "Year", ylab = "ratings", bty = "n", xlim = c(1980,2019), ylim = c(0, 10));
+reg.m = lm(denzel.movies$ratings~denzel.movies$year);
+abline(reg.m, col= "blue");
+
+plot(will.movies$year, will.movies$ratings, pch = 10, cex = 0.75, main = "Will's Ratings", xlab = "Year", ylab = "ratings", bty = "n", xlim = c(1980,2019), ylim = c(0,10));
+reg.m = lm(will.movies$ratings~will.movies$year);
+abline(reg.m, col= "blue");
+
+plot(denzel.p50$year, denzel.p50$ratings, pch = 10, cex = 0.75, main = "Denzel's Popular 50 Ratings", xlab = "Year", ylab = "ratings", bty = "n", xlim = c(1980,2019), ylim = c(0, 10));
+reg.m = lm(denzel.p50$ratings~denzel.p50$year);
+abline(reg.m, col= "blue");
+
+plot(will.p50$year, will.p50$ratings, pch = 10, cex = 0.75, main = "Will's Popular 50 Ratings", xlab = "Year", ylab = "ratings", bty = "n", xlim = c(1980,2019), ylim = c(0, 10));
+reg.m = lm(will.p50$ratings~will.p50$year);
+abline(reg.m, col= "blue");
+
+```
+
+
+
+```{r, metacritic-plots}
+par(mfrow =c(1,2));
+
+boxplot(will.movies$metacritic, main = "Will vs Denzel Metacritic", ylim = c(0, 100), ylab = "metacritic", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.movies$metacritic, main = "", ylim = c(0, 100), ylab = "metacritic", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+par(mfrow = c(1,1));
+
+par(mfrow =c(1,2));
+
+boxplot(will.p50$metacritic, main = "Will vs Denzel Popular 50 metacritic", ylim = c(0, 100), ylab = "", xlab = "Will", frame.plot = FALSE);
+boxplot(denzel.p50$metacritic, main = "", ylim = c(0, 100), ylab = "metacritic", xlab = "Denzel", frame.plot = FALSE);
+
+par(mfrow = c(1,1));
+
+plot(denzel.movies$year, denzel.movies$metacritic, pch = 10, cex = 0.75, main = "Denzel's metacritic", xlab = "Year", ylab = "metacritic", bty = "n", xlim = c(1980,2019), ylim = c(0, 100));
+reg.m = lm(denzel.movies$metacritic~denzel.movies$year);
+abline(reg.m, col= "blue");
+
+plot(will.movies$year, will.movies$metacritic, pch = 10, cex = 0.75, main = "Will's metacritic", xlab = "Year", ylab = "metacritic", bty = "n", xlim = c(1980,2019), ylim = c(0, 100));
+reg.m = lm(will.movies$metacritic~will.movies$year);
+abline(reg.m, col= "blue");
+
+plot(denzel.p50$year, denzel.p50$metacritic, pch = 10, cex = 0.75, main = "Denzel's Popular 50 metacritic", xlab = "Year", ylab = "metacritic", bty = "n", xlim = c(1980,2019), ylim = c(0, 100));
+reg.m = lm(denzel.p50$metacritic~denzel.p50$year);
+abline(reg.m, col= "blue");
+
+plot(will.p50$year, will.p50$metacritic, pch = 10, cex = 0.75, main = "Will's Popular 50 metacritic", xlab = "Year", ylab = "metacritic", bty = "n", xlim = c(1980,2019), ylim = c(0, 100));
+reg.m = lm(will.p50$metacritic~will.p50$year);
+abline(reg.m, col= "blue");
+
+```
+
+```{r, some-info-i-pulled}
+summary(denzel.movies$millions2000);
+summary(will.movies$millions2000);
+
+summary(denzel.movies$ratings);
+summary(will.movies$ratings);
+
+summary(denzel.movies$metacritic);
+summary(will.movies$metacritic);
+
+#will info
+length( intersect(will.movies.ttid, imdb.data$movies$all) );
+length( intersect(will.movies.ttid, imdb.data$movies$top250) );
+length( intersect(will.movies.ttid, imdb.data$movies$popular50$ttid) );
+length( intersect(will.movies.ttid, imdb.data$movies$gem50$ttid) );
+
+#denzel info
+length( intersect(denzel.movies.ttid, imdb.data$movies$all) );
+length( intersect(denzel.movies.ttid, imdb.data$movies$top250) );
+length( intersect(denzel.movies.ttid, imdb.data$movies$popular50$ttid) );
+length( intersect(denzel.movies.ttid, imdb.data$movies$gem50$ttid) );
+```
+

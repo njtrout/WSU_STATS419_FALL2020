@@ -1,0 +1,96 @@
+---
+title: "will and denzel"
+author: "Nic"
+date: "12/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(devtools);       # required for source_url
+library(humanVerseWSU);
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-str.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-stack.R");
+
+source_url = paste0(path.humanVerseWSU, "master/misc/functions-nlp-pos.R");
+
+path.to.final = "C:/Users/Nic Trout/Documents/C/WSU_STATS419_FALL2020/final/";
+
+
+
+```
+
+
+
+```{r}
+
+library(imdb);
+
+imdb::loadDataIMDB();
+names(imdb.data);
+
+humanVerseWSU::loadInflationData();
+
+```
+
+
+
+```{r}
+
+will.search = IMDB.searchPersonName("Will* Smith*");
+
+will.search;
+
+will.nmid = will.search$nmid[1];
+will.nmid = "nm0000226";
+will.movies = IMDB.getMoviesForPerson(will.nmid);
+will.movies;
+will.movies.ttid = will.movies$ttid;
+
+denzel.search = IMDB.searchPersonName("Denzel* Washington*");
+
+denzel.nmid = denzel.search$nmid[1];
+denzel.nmid = "nm0000243";
+denzel.movies = IMDB.getMoviesForPerson(denzel.nmid);
+denzel.movies;
+denzel.movies.ttid = denzel.movies$ttid;
+#########################
+
+denzel.movies = standardizeDollarsInDataFrame(denzel.movies, 2000, "millions", "year", "millions2000");
+
+
+will.movies = standardizeDollarsInDataFrame(will.movies, 2000, "millions", "year", "millions2000");
+
+
+denzel.movies.p50 = intersect(denzel.movies.ttid, imdb.data$movies$popular50$ttid);
+
+
+will.movies.p50 = intersect(will.movies.ttid, imdb.data$movies$popular50$ttid);
+
+denzel.p50 = subsetDataFrame(denzel.movies, mycols = "votes" , comparison = ">", myvals = 110000);
+
+will.p50 = subsetDataFrame(will.movies, mycols = "votes" , comparison = ">", myvals = 170000);
+
+
+denzel.movies;
+will.movies;
+
+denzel.movies.p50;
+will.movies.p50;
+
+
+```
+
+
